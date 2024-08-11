@@ -1,0 +1,398 @@
+<html><head><base href="https://hashtag-generator-ai.com/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HashtagPro - Análisis Avanzado de Hashtags</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --background-color: #f5f7fa;
+    --card-background: #ffffff;
+    --text-color: #34495e;
+    --border-color: #e0e0e0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+  }
+
+  h1, h2 {
+    margin: 0;
+  }
+
+  .search-container {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  #search-input {
+    width: 70%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+  }
+
+  #search-button {
+    width: 25%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #search-button:hover {
+    background-color: #27ae60;
+  }
+
+  .results-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .result-card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1 1 calc(33.333% - 20px);
+    min-width: 300px;
+  }
+
+  .hashtag-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .hashtag-item {
+    background-color: #f1f8ff;
+    border: 1px solid #c8e1ff;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .stats-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .stat-card {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    flex: 1;
+    margin: 0 10px;
+  }
+
+  .charts-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .chart-card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1;
+    margin: 0 10px;
+  }
+
+  .chart-container {
+    width: 100%;
+    height: 300px;
+  }
+
+  .viral-videos {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .video-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .video-thumbnail {
+    width: 120px;
+    height: 67px;
+    margin-right: 15px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-info {
+    flex-grow: 1;
+  }
+
+  .video-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .video-stats {
+    font-size: 0.9em;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>HashtagPro</h1>
+      <p>Análisis Avanzado de Hashtags para TikTok e Instagram</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Ingresa tu tema o nicho...">
+      <button id="search-button">Analizar</button>
+    </div>
+
+    <div class="results-container">
+      <div class="result-card">
+        <h2>Hashtags más populares</h2>
+        <ul class="hashtag-list" id="popular-hashtags"></ul>
+      </div>
+
+      <div class="result-card">
+        <h2>Hashtags de nicho</h2>
+        <ul class="hashtag-list" id="niche-hashtags"></ul>
+      </div>
+
+      <div class="result-card">
+        <h2>Hashtags emergentes</h2>
+        <ul class="hashtag-list" id="emerging-hashtags"></ul>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-card">
+        <h3>Alcance potencial</h3>
+        <p id="potential-reach">-</p>
+      </div>
+      <div class="stat-card">
+        <h3>Engagement promedio</h3>
+        <p id="avg-engagement">-</p>
+      </div>
+      <div class="stat-card">
+        <h3>Crecimiento semanal</h3>
+        <p id="weekly-growth">-</p>
+      </div>
+    </div>
+
+    <div class="charts-container">
+      <div class="chart-card">
+        <h2>Distribución de Hashtags</h2>
+        <div class="chart-container">
+          <canvas id="hashtagChart1"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h2>Engagement por Tipo</h2>
+        <div class="chart-container">
+          <canvas id="hashtagChart2"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h2>Tendencia Semanal</h2>
+        <div class="chart-container">
+          <canvas id="hashtagChart3"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="viral-videos">
+      <h2>Videos Virales con Hashtags Similares</h2>
+      <div id="viral-videos-list"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const searchButton = document.getElementById('search-button');
+    const searchInput = document.getElementById('search-input');
+    const popularHashtags = document.getElementById('popular-hashtags');
+    const nicheHashtags = document.getElementById('niche-hashtags');
+    const emergingHashtags = document.getElementById('emerging-hashtags');
+    const potentialReach = document.getElementById('potential-reach');
+    const avgEngagement = document.getElementById('avg-engagement');
+    const weeklyGrowth = document.getElementById('weekly-growth');
+    const viralVideosList = document.getElementById('viral-videos-list');
+
+    let hashtagChart1, hashtagChart2, hashtagChart3;
+
+    searchButton.addEventListener('click', analyzeHashtags);
+
+    async function analyzeHashtags() {
+      const query = searchInput.value;
+      if (!query) return;
+
+      try {
+        // Aquí normalmente harías una llamada a tu API
+        // const response = await axios.get(`https://api.hashtagpro.com/analyze?query=${encodeURIComponent(query)}`);
+        // const data = response.data;
+
+        // Por ahora, usaremos datos de ejemplo
+        const data = {
+          popularHashtags: ['#negociosonline', '#emprendimiento', '#marketing', '#exito', '#motivacion'],
+          nicheHashtags: ['#pyme', '#startuplife', '#ventasonline', '#coaching', '#mentoria'],
+          emergingHashtags: ['#tiktoknegocio', '#reelstips', '#emprendedordigital', '#crecimientoorganico', '#marketingstrategy'],
+          stats: {
+            potentialReach: '5.2M',
+            avgEngagement: '3.7%',
+            weeklyGrowth: '+12%'
+          },
+          chartData1: {
+            labels: ['Populares', 'Nicho', 'Emergentes'],
+            data: [40, 35, 25]
+          },
+          chartData2: {
+            labels: ['Populares', 'Nicho', 'Emergentes'],
+            data: [5.2, 3.8, 7.1]
+          },
+          chartData3: {
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            data: [12, 19, 15, 17, 22, 24, 20]
+          },
+          viralVideos: [
+            { id: 'dQw4w9WgXcQ', title: "Rick Astley - Never Gonna Give You Up", views: "1.2B", likes: "15M" },
+            { id: 'jNQXAC9IVRw', title: "Me at the zoo", views: "238M", likes: "11M" },
+            { id: 'kJQP7kiw5Fk', title: "Luis Fonsi - Despacito ft. Daddy Yankee", views: "7.9B", likes: "49M" }
+          ]
+        };
+
+        updateUI(data);
+      } catch (error) {
+        console.error('Error al analizar hashtags:', error);
+      }
+    }
+
+    function updateUI(data) {
+      popularHashtags.innerHTML = createHashtagList(data.popularHashtags);
+      nicheHashtags.innerHTML = createHashtagList(data.nicheHashtags);
+      emergingHashtags.innerHTML = createHashtagList(data.emergingHashtags);
+
+      potentialReach.textContent = data.stats.potentialReach;
+      avgEngagement.textContent = data.stats.avgEngagement;
+      weeklyGrowth.textContent = data.stats.weeklyGrowth;
+
+      updateChart(hashtagChart1, 'hashtagChart1', data.chartData1, 'Distribución de Tipos de Hashtags', 'doughnut');
+      updateChart(hashtagChart2, 'hashtagChart2', data.chartData2, 'Tasa de Engagement por Tipo (%)', 'bar');
+      updateChart(hashtagChart3, 'hashtagChart3', data.chartData3, 'Tendencia de Uso Semanal', 'line');
+      updateViralVideos(data.viralVideos);
+    }
+
+    function createHashtagList(hashtags) {
+      return hashtags.map(tag => `<li class="hashtag-item">${tag}</li>`).join('');
+    }
+
+    function updateChart(chartInstance, canvasId, chartData, title, type) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      return new Chart(ctx, {
+        type: type,
+        data: {
+          labels: chartData.labels,
+          datasets: [{
+            data: chartData.data,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: type === 'doughnut',
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: title
+            }
+          }
+        }
+      });
+    }
+
+    function updateViralVideos(videos) {
+      viralVideosList.innerHTML = videos.map(video => `
+        <div class="video-item">
+          <div class="video-thumbnail">
+            <img src="https://img.youtube.com/vi/${video.id}/default.jpg" alt="${video.title}">
+          </div>
+          <div class="video-info">
+            <div class="video-title">${video.title}</div>
+            <div class="video-stats">
+              Vistas: ${video.views} | Likes: ${video.likes}
+            </div>
+            <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank">Ver en YouTube</a>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
